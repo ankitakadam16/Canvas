@@ -3,9 +3,8 @@ app.controller('appController', function($scope, $http) {
   $scope.canvas = new fabric.Canvas('canvas', {
     selection: false
   });
-
   var grid = 50;
-var inset = 0;
+  var inset = 0;
   for (var i = 0; i < (600 / grid); i++) {
     $scope.canvas.add(new fabric.Line([i * grid, 0, i * grid, 600], {
       stroke: '#ccc',
@@ -35,18 +34,19 @@ var inset = 0;
 
   }
   var line, isDown;
-
   $scope.canvas.on('mouse:down', function(o) {
+
+    var pointer = $scope.canvas.getPointer(o.e);
     $scope.canvas.remove(line);
     isDown = true;
     var pointer = $scope.canvas.getPointer(o.e);
     var points = [Math.round(pointer.x / grid) * grid, Math.round(pointer.y / grid) * grid, pointer.x, pointer.y];
     line = new fabric.Rect({
-      left: 0 + inset,
-      top: 0 + inset,
-      width: 100,
-      height: 50,
-      fill: '#faa',
+      left: pointer.x,
+      top: pointer.y,
+      width: 10,
+      height: 10,
+      fill: 'black',
       originX: 'left',
       originY: 'top',
       centeredRotation: true,
@@ -56,9 +56,13 @@ var inset = 0;
 
     $scope.canvas.add(line);
 
+
+
   });
 
+
   $scope.canvas.on('mouse:move', function(o) {
+        console.log("move");
     if (!isDown) return;
     var pointer = $scope.canvas.getPointer(o.e);
     line.set({
@@ -70,6 +74,7 @@ var inset = 0;
   });
 
   $scope.canvas.on('mouse:up', function(o) {
+    console.log("up");
     var pointer = $scope.canvas.getPointer(o.e);
     isDown = false;
     line.set({
@@ -80,7 +85,7 @@ var inset = 0;
   });
 
   $scope.canvas.on('object:moving', function(o) {
-
+    console.log("objmove");
     var pointer = $scope.canvas.getPointer(o.e);
       var points = [Math.round(pointer.x / grid) * grid, Math.round(pointer.y / grid) * grid, pointer.x, pointer.y];
     line.set({
